@@ -1,3 +1,4 @@
+import 'package:delivery_app/app/pages/home/home_controller.dart';
 import 'package:delivery_app/app/pages/home/home_page.dart';
 import 'package:delivery_app/app/repositories/product/product_repository.dart';
 import 'package:delivery_app/app/repositories/product/product_repository_impl.dart';
@@ -11,6 +12,9 @@ class HomeRouter {
     providers: [
       Provider<ProductRepository>(
         create: (context) => ProductRepositoryImpl(dio: context.read()),
+      ),
+      Provider(
+        create: (context) => HomeController(context.read()),
       ),
     ],
     child: HomePage(),

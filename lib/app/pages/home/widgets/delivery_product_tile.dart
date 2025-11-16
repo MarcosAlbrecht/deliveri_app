@@ -56,6 +56,18 @@ class DeliveryProductTile extends StatelessWidget {
             width: 100,
             height: 100,
             fit: BoxFit.cover,
+            imageErrorBuilder: (context, error, stackTrace) {
+              return SizedBox(
+                height: 100,
+                width: 100,
+                child: Center(
+                  child: Icon(
+                    Icons.warning,
+                    size: 32,
+                  ),
+                ),
+              );
+            },
           ),
         ],
       ),

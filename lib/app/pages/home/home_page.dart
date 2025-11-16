@@ -1,9 +1,11 @@
 import 'package:delivery_app/app/core/ui/helpers/loader.dart';
 import 'package:delivery_app/app/core/ui/helpers/messages.dart';
 import 'package:delivery_app/app/core/ui/widgets/delivery_appbar.dart';
-import 'package:delivery_app/app/models/product_model.dart';
+import 'package:delivery_app/app/pages/home/home_controller.dart';
+import 'package:delivery_app/app/pages/home/home_state.dart';
 import 'package:delivery_app/app/pages/home/widgets/delivery_product_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,28 +16,37 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with Loader, Messages {
   @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<HomeController>().loadProducts();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: DeliveryAppbar(),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: 5,
-              itemBuilder: (context, index) {
-                return DeliveryProductTile(
-                  product: ProductModel(
-                    id: index,
-                    name: 'Name',
-                    description: 'Lanche acompanha pão, hamburguer 200g, mussarela, e presunto',
-                    price: 25,
-                    image: 'https://blog.letskuk.com.br/wp-content/uploads/2022/10/lanches-gourmet.jpg',
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
+      body: BlocConsumer<HomeController, HomeState>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          return Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: state.products.length,
+                  itemBuilder: (context, index) {
+                    final product = state.products[index];
+                    return DeliveryProductTile(
+                      product: product,
+                    );
+                  },
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

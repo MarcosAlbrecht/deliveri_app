@@ -1,5 +1,4 @@
-import 'package:delivery_app/app/core/ui/helpers/loader.dart';
-import 'package:delivery_app/app/core/ui/helpers/messages.dart';
+import 'package:delivery_app/app/core/ui/base_state/base_state.dart';
 import 'package:delivery_app/app/core/ui/widgets/delivery_appbar.dart';
 import 'package:delivery_app/app/pages/home/home_controller.dart';
 import 'package:delivery_app/app/pages/home/home_state.dart';
@@ -14,14 +13,11 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with Loader, Messages {
+class _HomePageState extends BaseState<HomePage, HomeController> {
   @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<HomeController>().loadProducts();
-    });
+  void onReady() {
+    super.onReady();
+    controller.loadProducts();
   }
 
   @override

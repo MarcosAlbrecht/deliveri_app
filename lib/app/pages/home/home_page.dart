@@ -29,7 +29,21 @@ class _HomePageState extends State<HomePage> with Loader, Messages {
     return Scaffold(
       appBar: DeliveryAppbar(),
       body: BlocConsumer<HomeController, HomeState>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          state.status.matchAny(
+            any: () => hideLoader(),
+            loading: () => showLoader(),
+            error: () {
+              hideLoader();
+              showError(state.errorMessage ?? "Erro não informado");
+            },
+          );
+        },
+        buildWhen: (previous, current) => current.status.matchAny(
+          any: () => false,
+          initial: () => true,
+          loaded: () => true,
+        ),
         builder: (context, state) {
           return Column(
             children: [

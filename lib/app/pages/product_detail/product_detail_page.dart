@@ -1,13 +1,29 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:delivery_app/app/core/extensions/formatter_extension.dart';
+import 'package:delivery_app/app/core/ui/base_state/base_state.dart';
 import 'package:delivery_app/app/core/ui/helpers/size_extensions.dart';
 import 'package:delivery_app/app/core/ui/styles/text_styles.dart';
 import 'package:delivery_app/app/core/ui/widgets/delivery_appbar.dart';
 import 'package:delivery_app/app/core/ui/widgets/delivery_increment_decrement_button.dart';
+import 'package:delivery_app/app/models/product_model.dart';
+import 'package:delivery_app/app/pages/product_detail/product_detail_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ProductDetailPage extends StatelessWidget {
-  const ProductDetailPage({super.key});
+class ProductDetailPage extends StatefulWidget {
+  final ProductModel product;
 
+  const ProductDetailPage({
+    super.key,
+    required this.product,
+  });
+
+  @override
+  State<ProductDetailPage> createState() => _ProductDetailPageState();
+}
+
+class _ProductDetailPageState extends BaseState<ProductDetailPage, ProductDetailController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +38,7 @@ class ProductDetailPage extends StatelessWidget {
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: NetworkImage(
-                    'https://static.vecteezy.com/system/resources/previews/027/145/316/non_2x/delicious-gourmet-burger-isolated-on-transparent-background-png.png',
+                    widget.product.image,
                   ),
                   fit: BoxFit.cover,
                 ),
@@ -34,7 +50,7 @@ class ProductDetailPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                'X-Burguer',
+                widget.product.name,
                 style: context.textStyles.textExtraBold.copyWith(fontSize: 22),
               ),
             ),
@@ -46,7 +62,7 @@ class ProductDetailPage extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: SingleChildScrollView(
                   child: Text(
-                    'Lanche acompanha pao, hamruguer 120g, mussarela, maionese, picles, bacon ',
+                    widget.product.description,
                     style: context.textStyles.textMediun,
                   ),
                 ),
@@ -61,35 +77,53 @@ class ProductDetailPage extends StatelessWidget {
                   width: context.percentWidth(.5),
                   height: 60,
                   padding: EdgeInsets.all(8),
-                  child: DeliveryIncrementDecrementButton(),
+                  child: BlocBuilder<ProductDetailController, int>(
+                    builder: (context, amount) {
+                      return DeliveryIncrementDecrementButton(
+                        amount: amount,
+                        incrementTap: () {
+                          controller.increment();
+                        },
+                        decrementTap: () {
+                          controller.decrement();
+                        },
+                      );
+                    },
+                  ),
                 ),
                 Container(
                   width: context.percentWidth(.5),
                   height: 60,
                   padding: EdgeInsets.all(8),
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Adicionar',
-                          style: context.textStyles.textExtraBold.copyWith(fontSize: 13),
+                  child: BlocBuilder<ProductDetailController, int>(
+                    builder: (context, amount) {
+                      return ElevatedButton(
+                        onPressed: () {},
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Adicionar',
+                              style: context.textStyles.textExtraBold.copyWith(fontSize: 13),
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                              child: AutoSizeText(
+                                (widget.product.price * amount).currencyPTBR,
+                                maxFontSize: 13,
+                                minFontSize: 5,
+                                maxLines: 1,
+                                textAlign: TextAlign.center,
+                                style: context.textStyles.textExtraBold.copyWith(fontSize: 13),
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: AutoSizeText(
-                            r'R$ 10555,99',
-                            maxFontSize: 13,
-                            minFontSize: 5,
-                            maxLines: 1,
-                            style: context.textStyles.textExtraBold.copyWith(fontSize: 13),
-                          ),
-                        ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
                 ),
               ],

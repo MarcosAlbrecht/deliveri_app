@@ -1,9 +1,19 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:delivery_app/app/core/ui/styles/colors_app.dart';
 import 'package:delivery_app/app/core/ui/styles/text_styles.dart';
 import 'package:flutter/material.dart';
 
 class DeliveryIncrementDecrementButton extends StatelessWidget {
-  const DeliveryIncrementDecrementButton({super.key});
+  final int amount;
+  final VoidCallback incrementTap;
+  final VoidCallback decrementTap;
+
+  const DeliveryIncrementDecrementButton({
+    super.key,
+    required this.amount,
+    required this.incrementTap,
+    required this.decrementTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,19 +25,15 @@ class DeliveryIncrementDecrementButton extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: IconButton(
-              icon: const Icon(Icons.remove),
-              onPressed: () {
-                // Lógica para decrementar
-              },
-              color: Colors.grey,
-            ),
+          IconButton(
+            icon: const Icon(Icons.remove),
+            onPressed: decrementTap,
+            color: Colors.grey,
           ),
           Text(
-            '1', // Valor atual
+            amount.toString(), // Valor atual
             style: context.textStyles.textRegular.copyWith(
               fontSize: 17,
               color: context.colors.secondary,
@@ -35,9 +41,7 @@ class DeliveryIncrementDecrementButton extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () {
-              // Lógica para incrementar
-            },
+            onPressed: incrementTap,
             color: context.colors.secondary,
           ),
         ],

@@ -73,7 +73,9 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       Text('Não tem uma conta?', style: context.textStyles.textBold),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).pushNamed('/auth/register');
+                        },
                         child: Text(
                           'Cadastre-se',
                           style: context.textStyles.textBold.copyWith(

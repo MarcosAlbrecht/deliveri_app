@@ -1,12 +1,15 @@
+import 'package:delivery_app/app/core/ui/base_state/base_state.dart';
 import 'package:delivery_app/app/core/ui/styles/text_styles.dart';
 import 'package:delivery_app/app/core/ui/widgets/delivery_appbar.dart';
 import 'package:delivery_app/app/core/ui/widgets/delivery_button.dart';
 import 'package:delivery_app/app/dto/order_product_dto.dart';
-import 'package:delivery_app/app/models/product_model.dart';
+import 'package:delivery_app/app/pages/auth/order/order_controller.dart';
+import 'package:delivery_app/app/pages/auth/order/order_state.dart';
 import 'package:delivery_app/app/pages/auth/order/widgets/order_field.dart';
 import 'package:delivery_app/app/pages/auth/order/widgets/order_product_tile.dart';
 import 'package:delivery_app/app/pages/auth/order/widgets/payment_types_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:validatorless/validatorless.dart';
 
 class OrderPage extends StatefulWidget {
@@ -16,7 +19,13 @@ class OrderPage extends StatefulWidget {
   State<OrderPage> createState() => _OrderPageState();
 }
 
-class _OrderPageState extends State<OrderPage> {
+class _OrderPageState extends BaseState<OrderPage, OrderController> {
+  @override
+  void onReady() {
+    final products = ModalRoute.of(context)!.settings.arguments as List<OrderProductDto>;
+    controller.load(products);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,33 +47,28 @@ class _OrderPageState extends State<OrderPage> {
                 ),
               ),
             ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                childCount: 10,
-                (context, index) {
-                  return Column(
-                    children: [
-                      OrderProductTile(
-                        index: index,
-                        product: OrderProductDto(
-                          product: ProductModel(
-                            id: index,
-                            name: 'Produto $index',
-                            description: 'Descrição do produto $index',
-                            price: index * 10,
-                            image:
-                                'https://img.freepik.com/psd-premium/delicious-fast-food-burger-pizza-png-imagem-transparente-de-alta-qualidade-para-stock-e-uso-comercial_1093584-250.jpg?semt=ais_hybrid&w=740&q=80',
+            BlocSelector<OrderController, OrderState, List<OrderProductDto>>(
+              selector: (state) => state.orderProducts,
+              builder: (context, state) {
+                return SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    childCount: state.length,
+                    (context, index) {
+                      return Column(
+                        children: [
+                          OrderProductTile(
+                            product: state[index],
+                            index: index,
                           ),
-                          amount: index,
-                        ),
-                      ),
-                      Divider(
-                        color: Colors.grey,
-                      ),
-                    ],
-                  );
-                },
-              ),
+                          Divider(
+                            color: Colors.grey,
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                );
+              },
             ),
             SliverToBoxAdapter(
               child: Column(

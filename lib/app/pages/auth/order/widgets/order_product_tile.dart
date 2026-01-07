@@ -50,7 +50,7 @@ class OrderProductTile extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        product.product.price.currencyPTBR,
+                        (product.product.price * product.amount).currencyPTBR,
                         style: context.textStyles.textRegular.copyWith(
                           fontSize: 16,
                           color: context.colors.secondary,

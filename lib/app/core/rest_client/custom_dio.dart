@@ -1,8 +1,10 @@
 import 'package:delivery_app/app/core/config/env/env.dart';
+import 'package:delivery_app/app/core/rest_client/interceptors/auth_interceptor.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 
 class CustomDio extends DioForNative {
+  late AuthInterceptor _authInterceptor;
   CustomDio()
     : super(
         BaseOptions(
@@ -11,6 +13,7 @@ class CustomDio extends DioForNative {
           receiveTimeout: Duration(seconds: 60),
         ),
       ) {
+    _authInterceptor = AuthInterceptor();
     interceptors.add(
       LogInterceptor(
         requestBody: true,
@@ -21,10 +24,12 @@ class CustomDio extends DioForNative {
   }
 
   CustomDio auth() {
+    interceptors.add(_authInterceptor);
     return this;
   }
 
   CustomDio unauth() {
+    interceptors.remove(_authInterceptor);
     return this;
   }
 }

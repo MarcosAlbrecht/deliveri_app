@@ -6,7 +6,17 @@ import 'package:flutter_awesome_select_clone/flutter_awesome_select.dart';
 
 class PaymentTypesField extends StatelessWidget {
   final List<PaymentTypeModel> paymentTypes;
-  const PaymentTypesField({super.key, required this.paymentTypes});
+  final ValueChanged<int> valueChanged;
+  final bool valid;
+  final String valueSelected;
+
+  const PaymentTypesField({
+    super.key,
+    required this.paymentTypes,
+    required this.valueChanged,
+    required this.valid,
+    required this.valueSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +32,11 @@ class PaymentTypesField extends StatelessWidget {
           ),
           SmartSelect.single(
             title: '',
-            selectedValue: '',
+            selectedValue: valueSelected,
             modalType: S2ModalType.bottomSheet,
-            onChange: (value) {},
+            onChange: (selected) {
+              valueChanged(int.parse(selected.value));
+            },
             tileBuilder: (context, state) {
               return InkWell(
                 onTap: state.showModal,
@@ -43,6 +55,25 @@ class PaymentTypesField extends StatelessWidget {
                           ),
                           const Icon(Icons.arrow_forward_ios_rounded),
                         ],
+                      ),
+                    ),
+                    Visibility(
+                      visible: !valid,
+                      child: const Divider(
+                        color: Colors.red,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 6),
+                      child: Visibility(
+                        visible: !valid,
+                        child: Text(
+                          'Selecione uma forma de pagamento',
+                          style: context.textStyles.textRegular.copyWith(
+                            color: Colors.red,
+                            fontSize: 13,
+                          ),
+                        ),
                       ),
                     ),
                   ],

@@ -80,8 +80,8 @@ Desenvolvido como parte do projeto Vakinha Burger.
 ## Prints do projeto
 
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/3f4e60d9-1451-4f59-8bda-a4b116d8b055" alt="Imagem 1 width="300px">
-  <img src="https://github.com/user-attachments/assets/e200fd41-beed-4f93-b717-f88787178702" alt="Imagem 2 width="300px">
-  <img src="https://github.com/user-attachments/assets/df9d5877-350e-4763-8d38-db29277c421f" alt="Imagem 3 width="300px">
-  <img src="https://github.com/user-attachments/assets/ad6728df-f7ea-47a1-966b-fa1ebef7f6bb" alt="Imagem 4 width="300px">
+  <img src="https://github.com/user-attachments/assets/3f4e60d9-1451-4f59-8bda-a4b116d8b055" alt="Imagem 1" width="300px">
+  <img src="https://github.com/user-attachments/assets/e200fd41-beed-4f93-b717-f88787178702" alt="Imagem 2" width="300px">
+  <img src="https://github.com/user-attachments/assets/df9d5877-350e-4763-8d38-db29277c421f" alt="Imagem 3" width="300px">
+  <img src="https://github.com/user-attachments/assets/ad6728df-f7ea-47a1-966b-fa1ebef7f6bb" alt="Imagem 4" width="300px">
 </div>

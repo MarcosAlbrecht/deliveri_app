@@ -79,7 +79,7 @@ Desenvolvido como parte do projeto Vakinha Burger.
 
 ## Prints do projeto
 
-![image](https://github.com/user-attachments/assets/3f4e60d9-1451-4f59-8bda-a4b116d8b055)
-![image](https://github.com/user-attachments/assets/e200fd41-beed-4f93-b717-f88787178702)
-![image](https://github.com/user-attachments/assets/df9d5877-350e-4763-8d38-db29277c421f)
-![image](https://github.com/user-attachments/assets/ad6728df-f7ea-47a1-966b-fa1ebef7f6bb)
+![image](https://github.com/user-attachments/assets/3f4e60d9-1451-4f59-8bda-a4b116d8b055&height=500)
+![image](https://github.com/user-attachments/assets/e200fd41-beed-4f93-b717-f88787178702&height=500)
+![image](https://github.com/user-attachments/assets/df9d5877-350e-4763-8d38-db29277c421f&height=500)
+![image](https://github.com/user-attachments/assets/ad6728df-f7ea-47a1-966b-fa1ebef7f6bb&height=500)

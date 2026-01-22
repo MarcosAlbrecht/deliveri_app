@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:delivery_app/app/dto/order_product_dto.dart';
 import 'package:delivery_app/app/models/payment_type_model.dart';
 import 'package:equatable/equatable.dart';
@@ -11,6 +12,10 @@ enum OrderStatus {
   loading,
   loaded,
   error,
+  updateOrder,
+  confirmRemoveProduct,
+  emptyBag,
+  success,
 }
 
 class OrderState extends Equatable {
@@ -32,6 +37,9 @@ class OrderState extends Equatable {
       paymentTypes = const [],
       errorMessage = null;
 
+  double get totalOrder =>
+      orderProducts.fold(0, (previousValue, element) => previousValue + element.product.price * element.amount);
+
   @override
   List<Object?> get props => [status, orderProducts, paymentTypes, errorMessage];
 
@@ -48,4 +56,21 @@ class OrderState extends Equatable {
       errorMessage: errorMessage ?? this.errorMessage,
     );
   }
+}
+
+class OrderConfirmDeleteProductState extends OrderState {
+  final OrderProductDto orderProduct;
+  final int index;
+
+  const OrderConfirmDeleteProductState({
+    required this.orderProduct,
+    required this.index,
+    required super.status,
+    required super.orderProducts,
+    required super.paymentTypes,
+    super.errorMessage,
+  });
+
+  @override
+  List<Object?> get props => [index];
 }

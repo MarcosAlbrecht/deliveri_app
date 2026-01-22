@@ -1,3 +1,4 @@
+import 'package:delivery_app/app/core/global/global_context.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,7 +15,7 @@ class AuthInterceptor extends Interceptor {
   @override
   Future<void> onError(DioException err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode == 401) {
-      await SharedPreferences.getInstance().then((prefs) => prefs.clear());
+      GlobalContext.i.loginExpired();
       handler.next(err);
     }
 

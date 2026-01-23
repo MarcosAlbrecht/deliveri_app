@@ -1,8 +1,15 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:developer';
+
+import 'package:delivery_app/app/core/exceptions/expire_token_exception.dart';
 import 'package:delivery_app/app/core/global/global_context.dart';
+import 'package:delivery_app/app/core/rest_client/custom_dio.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthInterceptor extends Interceptor {
+  final CustomDio dio;
+  AuthInterceptor(this.dio);
   @override
   Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     final token = await SharedPreferences.getInstance().then((prefs) => prefs.getString('accessToken'));
@@ -15,10 +22,64 @@ class AuthInterceptor extends Interceptor {
   @override
   Future<void> onError(DioException err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode == 401) {
-      GlobalContext.i.loginExpired();
+      try {
+        if (err.requestOptions.path != '/auth/refresh') {
+          await _refreshToken(err);
+          await _retryRequest(err, handler);
+        } else {
+          GlobalContext.i.loginExpired();
+        }
+      } catch (e) {
+        GlobalContext.i.loginExpired();
+      }
+    } else {
       handler.next(err);
     }
+  }
 
-    handler.next(err);
+  Future<void> _refreshToken(DioException err) async {
+    try {
+      final sp = await SharedPreferences.getInstance();
+      final refreshToken = sp.getString('refreshToken');
+
+      if (refreshToken == null) return;
+
+      final resultRefresh = await dio.auth().put(
+        '/auth/refresh',
+        data: {
+          'refresh_token': refreshToken,
+        },
+      );
+
+      sp.setString('accessToken', resultRefresh.data['access_token']);
+      sp.setString('refreshToken', resultRefresh.data['refresh_token']);
+    } on DioException catch (e, s) {
+      log('Erro ao realizar refresh token', error: e, stackTrace: s);
+      throw ExpireTokenException();
+    } catch (e, s) {
+      log('Erro ao realizar refresh token', error: e, stackTrace: s);
+    }
+  }
+
+  Future<void> _retryRequest(DioException err, ErrorInterceptorHandler handler) async {
+    final requestOptions = err.requestOptions;
+    final result = await dio.request(
+      requestOptions.path,
+      options: Options(
+        headers: requestOptions.headers,
+        method: requestOptions.method,
+      ),
+      data: requestOptions.data,
+      queryParameters: requestOptions.queryParameters,
+    );
+
+    handler.resolve(
+      Response(
+        requestOptions: requestOptions,
+        data: result.data,
+        statusCode: result.statusCode,
+        statusMessage: result.statusMessage,
+      ),
+    );
   }
 }
